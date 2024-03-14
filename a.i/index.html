@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chatbot</title>
+<style>
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    /* font-family: 'Montserrat'; */
+    font-family: 'Roboto';
+    scroll-behavior: smooth;
+}
+
+body {
+    /* font-family: 'Montserrat', sans-serif; */
+    font-family: 'Roboto';
+    background-color: var(--p-bg-dark);
+    color: var(--p-text-dark);
+    scroll-behavior: smooth;
+
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 7px;
+    background-color: rgb(61, 61, 61);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(178, 234, 241);
+    border-radius: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: var(--p-text-dark);
+}
+
+li {
+    list-style: none;
+    text-decoration: none;
+}
+
+.p-heading {
+    font-size: 2em;
+    font-family: 'Roboto'
+
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+/* VARS  */
+:root {
+    --p-btn: rgb(182, 223, 235);
+    --login-btn: rgb(169, 234, 247);
+    --sec-btn: rgb(169, 247, 243);
+    --p-bg-dark: rgb(10, 10, 10);
+    --p-text-dark: rgb(216, 216, 216);
+    --sec-bg-dark: rgb(69, 69, 69);
+
+}
+
+/* NAVBAR */
+
+nav {
+    display: flex;
+    padding: 30px 0px;
+    align-self: center;
+    align-items: center;
+    justify-content: space-around;
+    background-color: var(--p-bg-dark);
+    color: var(--p-text-dark);
+    position: sticky;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    opacity: 0.95;
+
+    left: 0;
+    box-shadow: 0px 10px 40px rgba(10, 10, 10, 0.437);
+}
+
+nav .active{
+    color: var(--p-btn);
+}
+
+nav #hamburger {
+    display: none;
+    width: 30px;
+}
+
+nav #close {
+    width: 30px;
+    cursor: pointer;
+    display: none;
+}
+nav #logo-link{
+    transition: 0.15s ease-in-out;
+}
+nav #logo-link:hover{
+    color: white;
+    
+}
+
+
+nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    align-self: center;
+}
+
+
+nav .nav-link {
+    align-items: center;
+    text-align: center; 
+    padding: 2px 0px;
+    margin: 0px 40px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.nav-link::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 1.5px;
+    margin-top: 1.5px;
+    background: var(--p-btn);
+    transition: width .3s;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+nav .nav-link:hover {
+    color: var(--p-btn);
+}
+
+.login-btn {
+    background-color: rgb(172, 223, 228);
+    padding: 15px 25px;
+    border-radius: 40px;
+    transition: 0.6s ease-in-out;
+    font-weight: 600;
+    color: rgb(54, 54, 54);
+}
+
+nav #logo {
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    color: black;
+    border-radius: 20px;
+    background-color: var(--sec-btn);
+}
+
+
+    /* AI CSS  */
+  
+  #chat-container {
+    /* background-color: rgb(37, 37, 37); */
+    border-radius: 30px;
+    padding: 20px;
+    margin: 0px auto;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    width: 75%;
+    height: 80%;
+    /* border: 1px solid rgba(31, 31, 31, 0.567); */
+    position: relative;
+    
+}
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+h1{
+    color: transparent;
+    font-size: 2.8em;
+    background: linear-gradient(to right, #90e3ef, #4bf4e3, #ff006e, #ee0979, #ff8a00);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;  
+    animation: gradientAnimation 10s ease infinite;
+
+    /* font-weight: 250; */
+    
+}
+h2{
+    font-size: 1.5em;
+}
+p{
+    font-size: 1em;
+    color: rgb(168, 168, 168);
+    /* font-weight: 250; */
+}
+h4{
+    /* position: absolute;
+    top: 50%;
+    left: 50%; */
+    font-weight: 300;
+    font-size: 1.2em;
+    color: gray;
+    /* transform: translateX(-50%);
+    transform: translateY(-50%); */
+}
+
+
+  
+#chat-history {
+    height: 55vh;
+    padding: 20px 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 90%;
+    margin: auto;
+    overflow-y: auto;
+  }
+  
+  .user-message {
+    /* text-align: right; */
+    padding: 10px 20px;
+    /* background-color: var(--sec-bg-dark); */
+    border-radius: 15px 15px 15px 15px;
+    width: 100%;
+    background-color: rgb(19, 18, 18);
+    clear: both;
+    box-shadow: 0px 0px 10px rgba(5, 61, 111, 0.716);
+    display: block;
+    padding: 15px;
+    float: right;
+    /* color: black; */
+    margin-bottom:15px;
+  }
+  
+  .bot-message {
+    display: block;
+    width: 100%;
+    clear: both;
+    color: var(--p-text-dark);
+    float: left;
+    box-shadow: 0px 0px 10px rgba(2, 85, 2, 0.671);
+    padding: 15px;
+    background-color: rgb(19, 18, 18);
+    border-radius: 15px 15px 15px 15px;
+    margin-bottom: 15px;
+  }
+  
+  form {
+    display: flex;
+    position: sticky;
+    bottom: 0px;
+    margin-top: 20px;
+    padding: 10px;
+    justify-content: center;
+    width: 60%;
+    margin: auto;
+    background-color: var(--sec-bg-dark);
+    border-radius: 30px;
+    align-items: center;
+  }
+  
+  input {
+    align-items: center;
+    background-color: transparent;
+    /* flex-grow: 1; */
+    width: 90%;
+    outline: none;
+    font-size: 0.9em;
+    color: var(--p-text-dark);
+    /* margin-right: 10px; */
+    padding: 10px 0px;
+    border: none;
+  }
+  
+  button {
+    color: white;
+    border: none;
+    
+    /* padding: 10px 15px; */
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  #loader {
+  display: none; /* Hide by default */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+
+/* MEDIA QUERIES  */
+
+@media (max-width: 1299px) {
+
+    .p-heading {
+        font-size: 1.9em;
+    }
+
+    nav {
+        justify-content: space-around;
+    }
+.nav-link{
+        width: 100px;   
+
+}
+nav ul {
+        flex-direction: column;
+        position: fixed;
+        top: 110px;
+        right: -300px;
+        justify-content: flex-start;
+        height: 100vh;
+        padding: 0px 150px;
+        transition: 0.3s ease-in-out;
+
+    }
+
+    #navbar.active {
+        right: 0px;
+        background-color: var(--p-bg-dark);
+        z-index: 99999;
+    }
+
+    nav ul .nav-link {
+        margin: 50px 0px;
+    }
+
+    nav #hamburger {
+        filter: invert();
+        width: 30px;
+        cursor: pointer;
+        display: block;
+    }
+
+    
+    nav #close {
+        display: none;
+        width: 30px;
+        filter: invert();
+        }
+   
+    
+    }
+
+
+
+@media (max-width: 599px) {
+
+    nav #logo{
+        font-size: 1em;
+       }
+       .login-btn{
+        padding: 10px 10px;
+        font-size: 0.9em;
+       }
+       nav #hamburger{
+        width: 25px;
+       }      
+       nav ul .nav-link {
+        margin: 20px 0px;}
+}
+
+</style>
+<link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="index.html" id="logo-link"><h3 id="logo">RandoSocial</h3></a>
+    <ul id="navbar">
+      <a href="index.html" class="nav-link">
+        <li>Home</li>
+      </a>
+      <a href="messages.html" class="nav-link">
+        <li>Messages</li>
+      </a>
+      <a href="explore.html" class="nav-link">
+        <li>Explore</li>
+      </a>
+      <a href="" class="nav-link">
+        <li>Wizard API</li>
+      </a>
+      <a href="" class="nav-link active">
+        <li>Profile</li>
+      </a>
+      <a href="" class="nav-link">
+        <li>Settings</li>
+      </a>
+    </ul>
+    <a href="landing.html" class="login-btn">Login</a>
+        <img src="/assets/Hamburger_icon.svg.png" alt="" id="hamburger">
+        <img src="/assets/close.png" id="close" alt="">
+  </nav>
+
+
+  <div id="chat-container">
+  <h1>Hello, astrixui</h1>
+  <h4 class="prompt">How can I help you today?</h4>
+  <div id="chat-history">
+    <!-- <div class="user-message">
+      <h2>You</h2>
+      <p>Hello</p>
+    </div>
+
+    <div class="bot-message">
+      <h2>Felix</h2>
+      <p>Hello, How are you doing this fine evening, Ayush? </p>
+    </div>
+
+    <div class="user-message">
+      <h2>You</h2>
+      <p>No bitches?</p>
+    </div> -->
+    
+    
+  </div>
+  <form id="chat-form">
+    <input type="text" id="user-input" placeholder="Enter your message">
+    <button type="submit" class="login-btn">Send</button>
+  </form>
+</div>
+<div id="loader">
+  <img src="loader.gif" width="150px" alt="Loading...">
+</div>
+  <script>
+    const chatHistory = document.getElementById('chat-history');
+    const userInput = document.getElementById('user-input');
+    const form = document.getElementById('chat-form');
+
+    async function sendMessage() {
+      const userMessage = userInput.value;
+      userInput.value = ''; // Clear input field
+      console.log(userMessage)
+      try {
+        const response = await fetch('/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userInput: userMessage }),
+        });
+
+        const data = await response.json();
+        console.log(data)
+        const botMessage = data.response;
+        console.log(botMessage)
+        // Add chat message to the chat history
+        chatHistory.innerHTML += `<div class="user-message">${userMessage}</div>`;
+        chatHistory.innerHTML += `<div class="bot-message">${botMessage}</div>`;
+
+        // Scroll to the bottom of the chat history
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle errors gracefully, e.g., display an error message to the user
+      }
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent form submission
+      const loader = document.getElementById('loader');
+      loader.style.display = 'block'; // Show the loader
+      sendMessage().finally(() => {
+      loader.style.display = 'none'; // Hide the loader after the message is sent
+    });;
+    });
+  </script>
+</body>
+</html>
